@@ -61,7 +61,7 @@ Establish the project folder structure, dependency manifest, and credential wiri
 
 ### Sub-Task 2 — File Walker (`file_walker.py`)
 
-**Status:** `[ ] pending`
+**Status:** `[x] done`
 
 **Intent:**
 Implement the module responsible for traversing a directory (or reading a single file) and returning a list of file content records. This is the data ingestion layer — everything downstream depends on its output.
