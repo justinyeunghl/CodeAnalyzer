@@ -150,7 +150,7 @@ Wrap the IBM watsonx.ai text generation REST API call. This module handles crede
 
 ### Sub-Task 5 — Response Parser (`parser.py`)
 
-**Status:** `[ ] pending`
+**Status:** `[x] done`
 
 **Intent:**
 Extract structured data from the raw LLM response text. Since the prompt instructs the LLM to respond in Markdown with `## Summary` and `## Code Review` sections, the parser splits on those headings to produce a clean dict.
