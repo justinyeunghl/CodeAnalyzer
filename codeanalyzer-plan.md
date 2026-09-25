@@ -174,7 +174,7 @@ Extract structured data from the raw LLM response text. Since the prompt instruc
 
 ### Sub-Task 6 — CLI Entrypoint (`analyze.py`)
 
-**Status:** `[ ] pending`
+**Status:** `[x] done`
 
 **Intent:**
 Wire all modules together into a runnable CLI. This is the file the user executes. It handles argument parsing, orchestrates the pipeline, prints results to the terminal, and optionally saves a Markdown report.
