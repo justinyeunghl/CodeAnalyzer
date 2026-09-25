@@ -89,7 +89,7 @@ Implement the module responsible for traversing a directory (or reading a single
 
 ### Sub-Task 3 — Prompt Builder (`prompt_builder.py`)
 
-**Status:** `[ ] pending`
+**Status:** `[x] done`
 
 **Intent:**
 Assemble the list of file content records into a single, well-structured prompt string that instructs watsonx.ai to produce both a summary and a code review in one response. Good prompt design here directly determines output quality.
