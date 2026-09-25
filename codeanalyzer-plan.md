@@ -116,7 +116,7 @@ Assemble the list of file content records into a single, well-structured prompt 
 
 ### Sub-Task 4 — watsonx Client (`watsonx_client.py`)
 
-**Status:** `[ ] pending`
+**Status:** `[x] done`
 
 **Intent:**
 Wrap the IBM watsonx.ai text generation REST API call. This module handles credential loading, token exchange (IBM IAM), request construction, and returning the raw LLM response text.
