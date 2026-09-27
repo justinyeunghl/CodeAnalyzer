@@ -36,11 +36,17 @@ def walk(path: str) -> list[dict]:
                 if d not in IGNORED_DIRS and not d.startswith(".")
             ]
             for filename in filenames:
-                targets.append(os.path.join(dirpath, filename))
+                if not filename.startswith("."):
+                    targets.append(os.path.join(dirpath, filename))
 
     results = []
     for filepath in targets:
-        if os.path.getsize(filepath) > SIZE_LIMIT:
+        try:
+            size = os.path.getsize(filepath)
+        except OSError as exc:
+            print(f"[SKIP] {filepath} — cannot read file: {exc}")
+            continue
+        if size > SIZE_LIMIT:
             print(f"[SKIP] {filepath} — file exceeds 50 KB limit")
             continue
         try:
@@ -48,5 +54,7 @@ def walk(path: str) -> list[dict]:
                 results.append({"path": filepath, "content": fh.read()})
         except UnicodeDecodeError:
             pass
+        except OSError as exc:
+            print(f"[SKIP] {filepath} — cannot read file: {exc}")
 
     return results

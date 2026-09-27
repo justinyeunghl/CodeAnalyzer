@@ -57,7 +57,11 @@ def main():
     print(f"Analysing {len(files)} file(s) with {args.provider}...")
 
     generate = _PROVIDERS[args.provider]
-    raw = generate(prompt_builder.build_prompt(files, lang=args.lang))
+    try:
+        raw = generate(prompt_builder.build_prompt(files, lang=args.lang))
+    except Exception as exc:
+        print(f"Error: LLM call failed — {exc}")
+        sys.exit(1)
     result = parser.parse(raw)
 
     print(SEP)
@@ -71,6 +75,7 @@ def main():
     print(result["code_review"])
 
     if args.output:
+        output_path = args.output
         report = (
             "# CodeAnalyzer Report\n\n"
             "## Summary\n\n"
@@ -78,9 +83,9 @@ def main():
             "## Code Review\n\n"
             f"{result['code_review']}\n"
         )
-        with open(args.output, "w", encoding="utf-8") as fh:
+        with open(output_path, "w", encoding="utf-8") as fh:
             fh.write(report)
-        print(f"Report saved to {args.output}")
+        print(f"Report saved to {output_path}")
 
 
 if __name__ == "__main__":

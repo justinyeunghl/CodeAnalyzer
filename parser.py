@@ -1,6 +1,7 @@
 """Extracts the Summary and Code Review sections from the raw LLM response text."""
 
-_FALLBACK = "(section not found in response)"
+_FALLBACK_SUMMARY = "(summary not found in response)"
+_FALLBACK_REVIEW = "(code review not found in response)"
 
 
 def parse(raw: str) -> dict:
@@ -22,13 +23,13 @@ def parse(raw: str) -> dict:
         A dict with exactly two keys:
           "summary"     - text between ## Summary and ## Code Review, stripped.
           "code_review" - text after ## Code Review, stripped.
-        Either value is "(section not found in response)" when the heading is
+        Either value is a section-specific fallback string when the heading is
         missing from the raw text.
     """
     _, summary_sep, after_summary = raw.partition("## Summary")
     summary_raw, review_sep, after_review = after_summary.partition("## Code Review")
 
-    summary = summary_raw.strip() if summary_sep else _FALLBACK
-    code_review = after_review.strip() if review_sep else _FALLBACK
+    summary = summary_raw.strip() if summary_sep else _FALLBACK_SUMMARY
+    code_review = after_review.strip() if review_sep else _FALLBACK_REVIEW
 
     return {"summary": summary, "code_review": code_review}
