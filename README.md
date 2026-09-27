@@ -1,49 +1,72 @@
-# codeanalyzer
+# CodeAnalyzer
 
-A Python CLI tool that reads a file or directory of source code and produces a combined report using IBM watsonx.ai, including an architectural summary and a list of code review flags (refactoring opportunities and bug risks).
+A Python CLI and web tool that analyzes a codebase and generates an
+AI-powered report with an architectural summary and code review flags —
+built for the **IBM Bob 2.0 Hackathon**.
 
-## Prerequisites
+## What it does
 
-- Python 3.9 or higher
-- An IBM watsonx.ai account with an API key, project ID, and regional URL
+Point it at any folder or file, and it produces a Markdown report with:
 
-## Setup
+- **Summary** — a plain-English explanation of what the codebase does and how it's structured.
+- **Code Review** — refactoring opportunities and potential bug risks, referenced per file.
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd codeanalyzer
-   ```
+## Architecture
 
-2. **Create your `.env` file from the example:**
-   ```bash
-   cp .env.example .env
-   ```
-   Open `.env` and fill in your credentials:
-   ```
-   WATSONX_API_KEY=<your api key>
-   WATSONX_PROJECT_ID=<your project id>
-   WATSONX_URL=https://us-south.ml.cloud.ibm.com
-   ```
+```
+file_walker.py      → reads and filters source files (size limit, binary skip)
+prompt_builder.py    → assembles the LLM prompt (supports --lang en/es)
+watsonx_client.py    → IBM watsonx.ai / Granite provider (with mock fallback)
+groq_client.py       → Groq provider (live inference)
+parser.py            → extracts Summary + Code Review from the LLM response
+analyze.py           → CLI entrypoint
+app.py               → Streamlit web UI
+```
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+## Configuration
+
+Copy `.env.example` to `.env` and fill in credentials for whichever
+provider you want to use:
+```
+WATSONX_API_KEY=your_key_here
+WATSONX_PROJECT_ID=your_project_id_here
+WATSONX_URL=https://us-south.ml.cloud.ibm.com
+
+GROQ_API_KEY=your_key_here
+```
+
+
+**No credentials?** The tool automatically falls back to a **mock mode**
+that simulates the model's response, so the full pipeline can still be
+tested end-to-end without any network access.
 
 ## Usage
 
-Analyze a directory and print the report to the terminal:
+### Command line
 ```bash
-python analyze.py ./myproject
+python analyze.py <path> --provider [watsonx|groq] --output report.md
 ```
 
-Analyze a directory and also save the report as a Markdown file:
+### Web interface
 ```bash
-python analyze.py ./myproject --output report.md
+streamlit run app.py
 ```
 
-For full usage help:
-```bash
-python analyze.py --help
-```
+## Built with IBM Bob 2.0
+
+Designed in Bob's **Plan mode**, implemented in **Agent mode**, with Git
+commits after each step. See `/screenshots` for session evidence.
+
+## Notes
+
+IBM watsonx.ai access could not be provisioned during the hackathon due
+to an IBM Cloud verification issue. Groq was integrated as a live
+secondary provider so the tool always has a working path to real LLM
+inference, while watsonx support remains fully implemented.
