@@ -15,6 +15,10 @@ for _key in ["GROQ_API_KEY", "WATSONX_API_KEY", "WATSONX_PROJECT_ID", "WATSONX_U
     if _key in st.secrets:
         os.environ[_key] = st.secrets[_key]
 
+# DEBUG — remove once secrets wiring is confirmed
+st.write(f"DEBUG: GROQ_API_KEY in st.secrets: {'GROQ_API_KEY' in st.secrets}")
+st.write(f"DEBUG: GROQ_API_KEY in os.environ: {'GROQ_API_KEY' in os.environ}")
+
 # ---------------------------------------------------------------------------
 # Page config
 # ---------------------------------------------------------------------------
