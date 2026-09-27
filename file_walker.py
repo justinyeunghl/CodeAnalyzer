@@ -4,6 +4,13 @@ import os
 
 SIZE_LIMIT = 51_200  # 50 KB
 
+# Directories that are always skipped during traversal.
+IGNORED_DIRS = {
+    ".git", ".vs", ".vscode", ".idea",
+    "__pycache__", ".venv", "venv", "node_modules",
+    ".bob", "dist", "build",
+}
+
 
 def walk(path: str) -> list[dict]:
     """Collect readable text files under `path`.
@@ -15,15 +22,21 @@ def walk(path: str) -> list[dict]:
         A list of dicts with keys ``"path"`` (str) and ``"content"`` (str),
         one entry per accepted file.  Files larger than 50 KB are skipped with
         a printed warning; binary files are skipped silently.
+        Hidden directories and IDE/tooling folders listed in IGNORED_DIRS are
+        never entered.
     """
     if os.path.isfile(path):
         targets = [path]
     else:
-        targets = [
-            os.path.join(dirpath, filename)
-            for dirpath, _dirnames, filenames in os.walk(path)
-            for filename in filenames
-        ]
+        targets = []
+        for dirpath, dirnames, filenames in os.walk(path):
+            # Prune ignored directories in-place so os.walk won't descend into them.
+            dirnames[:] = [
+                d for d in dirnames
+                if d not in IGNORED_DIRS and not d.startswith(".")
+            ]
+            for filename in filenames:
+                targets.append(os.path.join(dirpath, filename))
 
     results = []
     for filepath in targets:
