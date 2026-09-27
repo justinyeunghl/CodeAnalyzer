@@ -1,10 +1,19 @@
 """Streamlit web interface for CodeAnalyzer."""
 
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 import streamlit as st
+
+# ---------------------------------------------------------------------------
+# Streamlit Cloud exposes secrets only via st.secrets, not as OS env vars.
+# Copy each secret into os.environ so the analyze.py subprocess inherits them.
+# ---------------------------------------------------------------------------
+for _key in ["GROQ_API_KEY", "WATSONX_API_KEY", "WATSONX_PROJECT_ID", "WATSONX_URL"]:
+    if _key in st.secrets:
+        os.environ[_key] = st.secrets[_key]
 
 # ---------------------------------------------------------------------------
 # Page config
